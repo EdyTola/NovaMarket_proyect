@@ -1,0 +1,53 @@
+site_name: ecom — Microservicios 2026
+site_description: Documentación del proyecto de microservicios ecom
+docs_dir: docs
+
+nav:
+  - Inicio: index.md
+  - Sesiones:
+      - s00-infraestructura: sesiones/s00-infraestructura.md
+      - s04-gateway: sesiones/s04-gateway.md
+      - s05-observabilidad: sesiones/s05-observabilidad.md
+      - s05b-stack: sesiones/s05b-observabilidad-stack.md
+      - s05c-herramientas: sesiones/s05c-observabilidad-herramientas.md
+      - s05d-automatizada: sesiones/s05d-observabilidad-automatizada.md
+      - s06-seguridad: sesiones/s06-seguridad.md
+      - s07-kafka-ingesta: sesiones/s07-kafka-ingesta.md
+      - s07b-arquitectura: sesiones/s07b-kafka-arquitectura.md
+      - s08-kafka-observabilidad: sesiones/s08-kafka-observabilidad.md
+      - s09-convencion-puertos: sesiones/s09-convencion-puertos.md
+  - Labs:
+      - Inicio: labs/README.md
+      - lab-observabilidad: labs/lab-observabilidad.md
+      - lab-auth-productos: labs/lab-auth-productos.md
+      - lab-categorias-estandar: labs/lab-categorias-estandar.md
+  - Guias:
+      - Plantilla de Informe: informe-template.md
+      - Rubrica de Evaluacion: rubrica-evaluacion.md
+
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.top
+    - content.code.copy
+
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+
+plugins:
+  - search
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+  - javascripts/mermaid.js

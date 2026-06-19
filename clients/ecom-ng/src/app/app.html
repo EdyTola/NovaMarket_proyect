@@ -1,0 +1,58 @@
+@if (isAuthRoute()) {
+  <router-outlet />
+} @else {
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-icon">NM</span>
+        <div>
+          <strong>NovaMarket</strong>
+          <small>Minimarket POS</small>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        @if (auth.isAuthenticated()) {
+          <a routerLink="/pos" routerLinkActive="active">
+            <span class="nav-icon">₡</span> Caja
+          </a>
+          <a routerLink="/ventas" routerLinkActive="active">
+            <span class="nav-icon">≡</span> Ventas
+          </a>
+        }
+        <a routerLink="/rubros" routerLinkActive="active">
+          <span class="nav-icon">▦</span> Rubros
+        </a>
+        <a routerLink="/articulos" routerLinkActive="active">
+          <span class="nav-icon">◫</span> Artículos
+        </a>
+        @if (auth.isAuthenticated()) {
+          <a routerLink="/existencias" routerLinkActive="active">
+            <span class="nav-icon">⚠</span> Existencias
+          </a>
+        }
+      </nav>
+
+      <div class="sidebar-footer">
+        @if (auth.isAuthenticated()) {
+          <div class="user-chip">
+            <span class="user-avatar">{{ userInitial() }}</span>
+            <div>
+              <strong>{{ auth.username() }}</strong>
+              <small>Cajero / admin</small>
+            </div>
+          </div>
+          <button type="button" class="nm-btn nm-btn-ghost nm-btn-block" (click)="logout()">
+            Cerrar sesión
+          </button>
+        } @else {
+          <a routerLink="/auth" class="nm-btn nm-btn-primary nm-btn-block">Iniciar sesión</a>
+        }
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <router-outlet />
+    </main>
+  </div>
+}

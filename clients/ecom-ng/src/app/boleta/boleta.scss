@@ -1,0 +1,58 @@
+.boleta {
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.boleta header {
+  text-align: center;
+  border-bottom: 2px dashed var(--nm-border);
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+}
+
+.boleta h3 {
+  font-size: 1.25rem;
+  color: var(--nm-primary);
+}
+
+.tipo {
+  margin: 0.2rem 0;
+  color: var(--nm-text-muted);
+  font-size: 0.85rem;
+}
+
+.boleta .nm-table {
+  font-size: 0.85rem;
+}
+
+.totales div {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0;
+}
+
+.totales .total {
+  font-weight: 700;
+  font-size: 1.05rem;
+  border-top: 2px solid var(--nm-text);
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.gracias {
+  text-align: center;
+  margin: 1rem 0 0;
+  font-weight: 600;
+}
+
+.print-btn {
+  margin-top: 1rem;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}

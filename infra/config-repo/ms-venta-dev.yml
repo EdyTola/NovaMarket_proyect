@@ -1,0 +1,60 @@
+server:
+  port: 19051
+  forward-headers-strategy: framework
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:41092
+  datasource:
+    url: jdbc:postgresql://localhost:15434/ecom_orden_db
+    username: ecom
+    password: ecom
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: false
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: false
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://localhost:18761/eureka
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    config-url: /ms-venta/v3/api-docs/swagger-config
+    url: /ms-venta/v3/api-docs
+  cache:
+    disabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true

@@ -1,0 +1,82 @@
+name: ecom-infra
+
+services:
+  config-server:
+    build:
+      context: ./config-server
+      dockerfile: Dockerfile
+    container_name: ecom-config
+    restart: unless-stopped
+    ports:
+      - "28888:8888"
+    volumes:
+      - ./config-repo:/config-repo
+    environment:
+      SERVER_PORT: 8888
+      SPRING_PROFILES_ACTIVE: native
+      CONFIG_REPO_LOCATION: file:/config-repo
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:8888/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 40s
+    networks:
+      ecom-prod-net:
+        aliases:
+          - ecom-config
+          - config-server
+
+  registry-server:
+    build:
+      context: ./registry-server
+      dockerfile: Dockerfile
+    container_name: ecom-eureka
+    restart: unless-stopped
+    ports:
+      - "28761:8761"
+    environment:
+      SERVER_PORT: 8761
+      SPRING_PROFILES_ACTIVE: prod
+      CONFIG_SERVER_URL: http://config-server:8888
+    depends_on:
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 40s
+    networks:
+      ecom-prod-net:
+        aliases:
+          - ecom-eureka
+          - registry-server
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: ecom-gateway
+    restart: unless-stopped
+    ports:
+      - "28082:8080"
+    volumes:
+      - ./gateway/logs:/app/logs
+    environment:
+      SERVER_PORT: 8080
+      SPRING_PROFILES_ACTIVE: prod
+      CONFIG_SERVER_URL: http://config-server:8888
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      config-server:
+        condition: service_healthy
+      registry-server:
+        condition: service_healthy
+    networks:
+      - ecom-prod-net
+
+networks:
+  ecom-prod-net:
+    name: ecom-prod-net

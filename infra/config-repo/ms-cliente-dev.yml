@@ -1,0 +1,31 @@
+server:
+  port: 8092
+  forward-headers-strategy: framework
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:15436/ecom_cliente_db
+    username: ecom
+    password: ecom
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:18761/eureka
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    config-url: /ms-cliente/v3/api-docs/swagger-config
+    url: /ms-cliente/v3/api-docs
+  cache:
+    disabled: true

@@ -1,0 +1,173 @@
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--nm-sidebar);
+  color: #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 0.5rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 1rem;
+}
+
+.brand-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--nm-primary), var(--nm-accent));
+  border-radius: var(--nm-radius-sm);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #fff;
+}
+
+.brand strong {
+  display: block;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.brand small {
+  color: var(--nm-sidebar-text);
+  font-size: 0.75rem;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--nm-radius-sm);
+  color: var(--nm-sidebar-text);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.92rem;
+  transition: background 0.15s, color 0.15s;
+}
+
+.sidebar-nav a:hover {
+  background: var(--nm-sidebar-active);
+  color: #fff;
+}
+
+.sidebar-nav a.active {
+  background: var(--nm-primary);
+  color: #fff;
+}
+
+.nav-icon {
+  width: 1.25rem;
+  text-align: center;
+  opacity: 0.9;
+  font-size: 0.85rem;
+}
+
+.sidebar-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1rem;
+  margin-top: auto;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+  padding: 0 0.25rem;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--nm-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.user-chip strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.user-chip small {
+  color: var(--nm-sidebar-text);
+  font-size: 0.75rem;
+}
+
+.sidebar-footer .nm-btn-ghost {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #e2e8f0;
+}
+
+.sidebar-footer .nm-btn-ghost:hover {
+  background: var(--nm-sidebar-active);
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  background: var(--nm-bg);
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .app-shell {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 0.75rem;
+  }
+
+  .brand {
+    border: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 1;
+    justify-content: flex-end;
+  }
+
+  .sidebar-footer {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+}

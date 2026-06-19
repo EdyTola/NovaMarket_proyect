@@ -1,0 +1,64 @@
+<div class="nm-page">
+  <header class="nm-page-header">
+    <div>
+      <h2>Artículos</h2>
+      <p class="nm-subtitle">Productos a la venta: precio, stock y código de barras</p>
+    </div>
+    <button type="button" class="nm-btn nm-btn-ghost" (click)="cargarProductos()">Recargar</button>
+  </header>
+
+  <p class="nm-muted" *ngIf="loading()">Cargando...</p>
+  <p class="nm-alert nm-alert-error" *ngIf="error()">{{ error() }}</p>
+
+  <div class="nm-card" *ngIf="puedeGestionarProductos()">
+    <form class="producto-form" (ngSubmit)="guardarProducto()">
+      <input class="nm-input" type="text" name="nombre" placeholder="Nombre" [(ngModel)]="formNombre" required />
+      <input class="nm-input" type="text" name="descripcion" placeholder="Descripción" [(ngModel)]="formDescripcion" />
+      <select class="nm-select" name="idCategoria" [(ngModel)]="formIdCategoria" required>
+        <option [ngValue]="null">Rubro</option>
+        <option *ngFor="let categoria of categorias()" [ngValue]="categoria.id">{{ categoria.nombre }}</option>
+      </select>
+      <input class="nm-input" type="number" name="precio" placeholder="Precio S/" [(ngModel)]="formPrecio" step="0.01" min="0.01" required />
+      <input class="nm-input" type="number" name="stock" placeholder="Stock" [(ngModel)]="formStock" min="0" />
+      <input class="nm-input" type="number" name="stockMinimo" placeholder="Stock mín." [(ngModel)]="formStockMinimo" min="0" />
+      <input class="nm-input" type="text" name="codigoBarras" placeholder="Código barras" [(ngModel)]="formCodigoBarras" />
+      <button type="submit" class="nm-btn nm-btn-primary">{{ editandoId ? 'Guardar' : 'Agregar' }}</button>
+      <button *ngIf="editandoId" type="button" class="nm-btn nm-btn-ghost" (click)="cancelarEdicion()">Cancelar</button>
+    </form>
+  </div>
+
+  <div class="nm-card nm-table-wrap">
+    <table class="nm-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th>Código</th>
+          <th>Rubro</th>
+          <th *ngIf="puedeGestionarProductos()">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let producto of productos()">
+          <td>{{ producto.id }}</td>
+          <td>
+            <strong>{{ producto.nombre }}</strong>
+            <div class="nm-muted">{{ producto.descripcion }}</div>
+          </td>
+          <td>S/ {{ producto.precio | number:'1.2-2' }}</td>
+          <td>
+            <span [class.nm-badge-warn]="producto.stockBajo" class="nm-badge">{{ producto.stock }}</span>
+          </td>
+          <td><code>{{ producto.codigoBarras || '—' }}</code></td>
+          <td>{{ nombreCategoria(producto.idCategoria) }}</td>
+          <td *ngIf="puedeGestionarProductos()" class="nm-actions">
+            <button type="button" class="nm-btn nm-btn-ghost nm-btn-sm" (click)="iniciarEdicion(producto)">Editar</button>
+            <button type="button" class="nm-btn nm-btn-danger nm-btn-sm" (click)="eliminarProducto(producto.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

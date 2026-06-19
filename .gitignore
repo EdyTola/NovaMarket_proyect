@@ -1,0 +1,66 @@
+# Build outputs
+site/
+target/
+build/
+dist/
+out/
+
+# MkDocs cache/output
+.cache/
+
+# Maven wrapper jar generated/downloaded locally
+**/.mvn/wrapper/maven-wrapper.jar
+
+# Runtime logs
+logs/
+**/logs/
+*.log
+
+# Docker/local runtime data
+*.pid
+*.tmp
+*.temp
+
+# IDEs and editors
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.settings/
+.classpath
+.project
+.factorypath
+.apt_generated/
+.springBeans
+.sts4-cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python/cache helpers used by docs tooling
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Node.js / Angular
+node_modules/
+.angular/
+/tmp
+/out-tsc
+/bazel-out
+.sass-cache/
+/connect.lock
+/coverage
+/typings
+__screenshots__/
+
+# Keep teaching/demo environment files in the repository for now.
+!**/.env
+!**/.env.example

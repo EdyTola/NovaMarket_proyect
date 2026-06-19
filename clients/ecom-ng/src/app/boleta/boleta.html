@@ -1,0 +1,49 @@
+<article class="boleta" *ngIf="venta() as v">
+  <header>
+    <h3>NovaMarket</h3>
+    <p class="tipo">Boleta de venta</p>
+    <p><strong>{{ v.numeroBoleta || ('Venta #' + v.id) }}</strong></p>
+    <p class="fecha">{{ v.fechaVenta | date:'dd/MM/yyyy HH:mm' }}</p>
+  </header>
+
+  <p>Cajero: {{ v.cajeroUsername }}</p>
+  <p>Estado: {{ v.estado }}</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Artículo</th>
+        <th>Cant.</th>
+        <th>P.unit.</th>
+        <th>Importe</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of v.items">
+        <td>{{ item.productoNombre }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>S/ {{ item.precioUnitario | number:'1.2-2' }}</td>
+        <td>S/ {{ item.subtotal | number:'1.2-2' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="totales">
+    <div><span>Subtotal</span><span>S/ {{ v.subtotal | number:'1.2-2' }}</span></div>
+    <div><span>Descuento</span><span>S/ {{ v.descuento | number:'1.2-2' }}</span></div>
+    <div class="total"><span>Total</span><span>S/ {{ v.total | number:'1.2-2' }}</span></div>
+    <div><span>Pago</span><span>{{ etiquetaMedio(v.medioPago) }}</span></div>
+    <div *ngIf="v.medioPago === 'EFECTIVO'">
+      <span>Recibido</span><span>S/ {{ v.montoRecibido | number:'1.2-2' }}</span>
+    </div>
+    <div *ngIf="v.vuelto != null && v.medioPago === 'EFECTIVO'">
+      <span>Vuelto</span><span>S/ {{ v.vuelto | number:'1.2-2' }}</span>
+    </div>
+  </div>
+
+  <p class="gracias">¡Gracias por su compra!</p>
+
+      <button type="button" class="nm-btn nm-btn-primary nm-btn-block print-btn no-print" (click)="imprimir()">
+        Imprimir boleta
+      </button>
+</article>

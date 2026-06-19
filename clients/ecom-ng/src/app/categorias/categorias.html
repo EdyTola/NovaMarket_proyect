@@ -1,0 +1,45 @@
+<div class="nm-page">
+  <header class="nm-page-header">
+    <div>
+      <h2>Rubros</h2>
+      <p class="nm-subtitle">Clasificación de artículos (bebidas, abarrotes, etc.)</p>
+    </div>
+    <button type="button" class="nm-btn nm-btn-ghost" (click)="cargarCategorias()">Recargar</button>
+  </header>
+
+  <p class="nm-muted" *ngIf="loading()">Cargando...</p>
+  <p class="nm-alert nm-alert-error" *ngIf="error()">{{ error() }}</p>
+
+  <div class="nm-card">
+    <form class="inline-form" (ngSubmit)="guardarCategoria()">
+      <input class="nm-input" type="text" name="nombre" placeholder="Nombre del rubro" [(ngModel)]="formNombre" required />
+      <input class="nm-input" type="text" name="descripcion" placeholder="Descripción" [(ngModel)]="formDescripcion" required />
+      <button type="submit" class="nm-btn nm-btn-primary">{{ editandoId ? 'Guardar' : 'Agregar' }}</button>
+      <button *ngIf="editandoId" type="button" class="nm-btn nm-btn-ghost" (click)="cancelarEdicion()">Cancelar</button>
+    </form>
+  </div>
+
+  <div class="nm-card nm-table-wrap">
+    <table class="nm-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of categorias()">
+          <td>{{ d.id }}</td>
+          <td><strong>{{ d.nombre }}</strong></td>
+          <td>{{ d.descripcion }}</td>
+          <td class="nm-actions">
+            <button type="button" class="nm-btn nm-btn-ghost nm-btn-sm" (click)="iniciarEdicion(d)">Editar</button>
+            <button type="button" class="nm-btn nm-btn-danger nm-btn-sm" (click)="eliminarCategoria(d.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

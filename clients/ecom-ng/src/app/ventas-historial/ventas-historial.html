@@ -1,0 +1,55 @@
+<div class="nm-page">
+  <header class="nm-page-header">
+    <div>
+      <h2>Historial de ventas</h2>
+      <p class="nm-subtitle">Registro en ms-venta · Pagos en ms-pago</p>
+    </div>
+    <div class="nm-actions">
+      <a routerLink="/pos" class="nm-btn nm-btn-ghost">Ir a caja</a>
+      <button type="button" class="nm-btn nm-btn-primary" (click)="cargar()">Recargar</button>
+    </div>
+  </header>
+
+  <p class="nm-muted" *ngIf="loading()">Cargando...</p>
+  <p class="nm-alert nm-alert-error" *ngIf="error()">{{ error() }}</p>
+
+  <div class="nm-card nm-table-wrap" *ngIf="ventas().length">
+    <table class="nm-table">
+      <thead>
+        <tr>
+          <th>Boleta</th>
+          <th>Fecha</th>
+          <th>Cajero</th>
+          <th>Total</th>
+          <th>Pago</th>
+          <th>Estado</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let v of ventas()">
+          <td><strong>{{ v.numeroBoleta || ('#' + v.id) }}</strong></td>
+          <td>{{ v.fechaVenta | date:'dd/MM/yy HH:mm' }}</td>
+          <td>{{ v.cajeroUsername }}</td>
+          <td>S/ {{ v.total | number:'1.2-2' }}</td>
+          <td>{{ etiquetaMedio(v.medioPago) }}</td>
+          <td><span class="nm-badge">{{ v.estado }}</span></td>
+          <td>
+            <button type="button" class="nm-btn nm-btn-ghost nm-btn-sm" (click)="verBoleta(v)">Boleta</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="nm-empty nm-card" *ngIf="!loading() && !ventas().length && !error()">
+    Aún no hay ventas. Realice una venta en Caja.
+  </div>
+
+  <div class="modal-backdrop no-print" *ngIf="seleccionada()" (click)="cerrarBoleta()">
+    <div class="modal-panel nm-card" (click)="$event.stopPropagation()">
+      <button type="button" class="modal-close" (click)="cerrarBoleta()" aria-label="Cerrar">×</button>
+      <app-boleta [venta]="seleccionada()!" />
+    </div>
+  </div>
+</div>

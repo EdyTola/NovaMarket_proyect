@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    config:
+      enabled: false
+  config:
+    import: ""
+
+jwt:
+  secret: dGVzdC1zZWNyZXQta2V5LWZvci11bml0LXRlc3RzLW9ubHktMzJieXRlcw==
+  issuer: auth
+
+eureka:
+  client:
+    enabled: false

@@ -1,0 +1,12 @@
+.inline-form {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr auto auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+@media (max-width: 768px) {
+  .inline-form {
+    grid-template-columns: 1fr;
+  }
+}

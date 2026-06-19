@@ -1,0 +1,145 @@
+<div class="nm-page">
+  <header class="nm-page-header">
+    <div>
+      <h2>Caja</h2>
+      <p class="nm-subtitle">Escanee el código, confirme el pago y emita la boleta</p>
+    </div>
+    <span class="nm-badge">{{ itemCount() }} ítem(s)</span>
+  </header>
+
+  <p class="nm-alert nm-alert-error" *ngIf="error()">{{ error() }}</p>
+
+  <ng-container *ngIf="!ventaCompletada(); else boletaEmitida">
+    <div class="nm-grid-2">
+      <div class="nm-card">
+        <label class="nm-label" for="codigo">Código de barras</label>
+        <div class="scan-row">
+          <input
+            id="codigo"
+            class="nm-input"
+            type="text"
+            [(ngModel)]="codigoBarras"
+            (keyup.enter)="buscarPorCodigo()"
+            placeholder="Escanear o escribir código..."
+            autofocus
+          />
+          <button type="button" class="nm-btn nm-btn-primary" (click)="buscarPorCodigo()" [disabled]="loading()">
+            Agregar
+          </button>
+        </div>
+
+        <h3 class="section-title">Carrito de venta</h3>
+        <div class="nm-table-wrap" *ngIf="cartItems().length; else carritoVacio">
+          <table class="nm-table">
+            <thead>
+              <tr>
+                <th>Artículo</th>
+                <th>P. unit.</th>
+                <th>Cant.</th>
+                <th>Subtotal</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let line of cartItems()">
+                <td><strong>{{ line.nombre }}</strong></td>
+                <td>S/ {{ line.precio | number:'1.2-2' }}</td>
+                <td>
+                  <input
+                    type="number"
+                    class="nm-input qty-input"
+                    min="1"
+                    [max]="line.stock"
+                    [ngModel]="line.cantidad"
+                    (ngModelChange)="cambiarCantidad(line.productoId, $event)"
+                  />
+                </td>
+                <td>S/ {{ lineTotal(line) | number:'1.2-2' }}</td>
+                <td>
+                  <button type="button" class="nm-btn nm-btn-danger nm-btn-sm" (click)="quitar(line.productoId)">×</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <ng-template #carritoVacio>
+          <div class="nm-empty">Sin artículos — escanee un código para comenzar</div>
+        </ng-template>
+      </div>
+
+      <aside class="nm-card checkout-panel">
+        <h3 class="section-title">Cobro</h3>
+
+        <div class="nm-field">
+          <label class="nm-label">Cliente (opcional)</label>
+          <select class="nm-select" [(ngModel)]="clienteId">
+            <option [ngValue]="null">Cliente general</option>
+            <option *ngFor="let c of clientes()" [ngValue]="c.id">
+              {{ c.nombre }} — {{ c.documento }}
+            </option>
+          </select>
+        </div>
+
+        <div class="nm-field">
+          <label class="nm-label">Descuento (S/)</label>
+          <input class="nm-input" type="number" min="0" step="0.01" [(ngModel)]="descuento" />
+        </div>
+
+        <div class="checkout-totals">
+          <div><span>Subtotal</span><strong>S/ {{ subtotal() | number:'1.2-2' }}</strong></div>
+          <div><span>Descuento</span><strong>S/ {{ descuento || 0 | number:'1.2-2' }}</strong></div>
+          <div class="total-row"><span>Total</span><strong>S/ {{ total() | number:'1.2-2' }}</strong></div>
+        </div>
+
+        <div class="nm-field">
+          <label class="nm-label">Forma de pago</label>
+          <div class="pay-chips">
+            <label *ngFor="let m of mediosPago" class="pay-chip" [class.active]="medioPago === m.value">
+              <input
+                type="radio"
+                name="medioPago"
+                [value]="m.value"
+                [(ngModel)]="medioPago"
+                (ngModelChange)="onMedioPagoChange()"
+              />
+              {{ m.label }}
+            </label>
+          </div>
+        </div>
+
+        <div class="nm-field" *ngIf="medioPago === 'EFECTIVO'">
+          <label class="nm-label">Monto recibido (S/)</label>
+          <input class="nm-input" type="number" min="0" step="0.01" [(ngModel)]="montoRecibido" />
+          <p class="vuelto-line" *ngIf="montoRecibido != null">
+            Vuelto: <strong>S/ {{ vuelto() | number:'1.2-2' }}</strong>
+          </p>
+        </div>
+
+        <p class="nm-muted" *ngIf="medioPago === 'TARJETA'">Confirme el cobro con datáfono.</p>
+        <p class="nm-muted" *ngIf="medioPago === 'YAPE'">Confirme el cobro en Yape.</p>
+
+        <button
+          type="button"
+          class="nm-btn nm-btn-accent nm-btn-block"
+          (click)="confirmarPago()"
+          [disabled]="loading() || !puedeCobrar()"
+        >
+          {{ loading() ? 'Procesando...' : 'Confirmar pago y boleta' }}
+        </button>
+        <button type="button" class="nm-btn nm-btn-ghost nm-btn-block" (click)="limpiarCarrito()">
+          Vaciar carrito
+        </button>
+      </aside>
+    </div>
+  </ng-container>
+
+  <ng-template #boletaEmitida>
+    <div class="nm-card boleta-wrap">
+      <p class="nm-alert nm-alert-success">Pago registrado correctamente</p>
+      <app-boleta [venta]="ventaCompletada()!" />
+      <button type="button" class="nm-btn nm-btn-primary nm-btn-block" (click)="nuevaVenta()">
+        Nueva venta
+      </button>
+    </div>
+  </ng-template>
+</div>

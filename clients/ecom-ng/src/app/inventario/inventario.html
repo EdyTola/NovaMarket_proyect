@@ -1,0 +1,38 @@
+<div class="nm-page">
+  <header class="nm-page-header">
+    <div>
+      <h2>Existencias</h2>
+      <p class="nm-subtitle">Artículos con stock por debajo del mínimo configurado</p>
+    </div>
+    <button type="button" class="nm-btn nm-btn-ghost" (click)="cargar()">Recargar</button>
+  </header>
+
+  <p class="nm-muted" *ngIf="loading()">Cargando alertas...</p>
+  <p class="nm-alert nm-alert-error" *ngIf="error()">{{ error() }}</p>
+  <p class="nm-alert nm-alert-info" *ngIf="!loading() && !alertas().length && !error()">
+    No hay artículos con stock bajo. Todo en orden.
+  </p>
+
+  <div class="nm-card nm-table-wrap" *ngIf="alertas().length">
+    <table class="nm-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Artículo</th>
+          <th>Stock</th>
+          <th>Mínimo</th>
+          <th>Código</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of alertas()">
+          <td>{{ p.id }}</td>
+          <td><strong>{{ p.nombre }}</strong></td>
+          <td><span class="nm-badge nm-badge-warn">{{ p.stock }}</span></td>
+          <td>{{ p.stockMinimo }}</td>
+          <td>{{ p.codigoBarras || '—' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

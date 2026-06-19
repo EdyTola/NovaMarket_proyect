@@ -1,0 +1,36 @@
+# Fragmento de referencia para migrar infra/gateway a Keycloak (OIDC / JWT RS256)
+#
+# No se aplica automaticamente. Copiar/adaptar en infra/config-repo/gateway-dev.yml
+# cuando se desactive la validacion HMAC actual (jwt.secret).
+#
+# Requisitos previos:
+#   1. keycloak/ levantado (realm novamarket importado)
+#   2. Token obtenido desde cliente ecom-ng o password grant (solo pruebas)
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # DEV (Maven host): issuer debe coincidir con el token
+          issuer-uri: http://localhost:41880/realms/novamarket
+          # PROD (Docker, desde otro contenedor en ecom-prod-net):
+          # issuer-uri: http://keycloak:8080/realms/novamarket
+          #
+          # Desde el host con gateway en Maven y Keycloak en Docker:
+          # issuer-uri: http://localhost:41880/realms/novamarket
+
+# El gateway actual lee roles del claim "roles" (sin prefijo adicional).
+# El realm novamarket incluye un protocol mapper que expone ROLE_CAJERO, etc.
+# igual que ms-auth (JwtService + SecurityConfig del gateway).
+
+# Angular (futuro): cliente publico ecom-ng
+#   - Authorization Code + PKCE (recomendado)
+#   - redirect: http://localhost:4200/*
+#   - issuer: http://localhost:41880/realms/novamarket
+#   - clientId: ecom-ng
+
+# Endpoints utiles:
+#   OpenID Configuration: http://localhost:41880/realms/novamarket/.well-known/openid-configuration
+#   JWKS:                 http://localhost:41880/realms/novamarket/protocol/openid-connect/certs
+#   Token (prueba curl):  ver README.md en keycloak/

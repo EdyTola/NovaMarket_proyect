@@ -1,0 +1,101 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth-route
+          uri: lb://ms-auth
+          predicates:
+            - Path=/auth/**
+
+        - id: rubro-route
+          uri: lb://ms-rubro
+          predicates:
+            - Path=/api/v1/categorias/**
+        - id: rubro-instancia
+          uri: lb://ms-rubro
+          predicates:
+            - Path=/api/v1/catalogo/instancia
+        - id: rubro-swagger
+          uri: lb://ms-rubro
+          predicates:
+            - Path=/ms-rubro/swagger-ui/**,/ms-rubro/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: articulo-route
+          uri: lb://ms-articulo
+          predicates:
+            - Path=/api/v1/productos/**
+        - id: articulo-instancia
+          uri: lb://ms-articulo
+          predicates:
+            - Path=/api/v1/producto/instancia
+        - id: articulo-swagger
+          uri: lb://ms-articulo
+          predicates:
+            - Path=/ms-articulo/swagger-ui/**,/ms-articulo/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: cliente-route
+          uri: lb://ms-cliente
+          predicates:
+            - Path=/api/v1/clientes/**
+        - id: cliente-swagger
+          uri: lb://ms-cliente
+          predicates:
+            - Path=/ms-cliente/swagger-ui/**,/ms-cliente/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: venta-route
+          uri: lb://ms-venta
+          predicates:
+            - Path=/api/v1/ventas/**
+        - id: orden-legacy-route
+          uri: lb://ms-venta
+          predicates:
+            - Path=/api/v1/ordenes/**
+        - id: venta-swagger
+          uri: lb://ms-venta
+          predicates:
+            - Path=/ms-venta/swagger-ui/**,/ms-venta/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+        - id: pago-route
+          uri: lb://ms-pago
+          predicates:
+            - Path=/api/v1/pagos/**
+        - id: pago-swagger
+          uri: lb://ms-pago
+          predicates:
+            - Path=/ms-pago/swagger-ui/**,/ms-pago/v3/api-docs/**
+          filters:
+            - StripPrefix=1
+
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: false
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://localhost:18761/eureka
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,circuitbreakers,circuitbreakerevents
+  endpoint:
+    health:
+      show-details: always
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+jwt:
+  secret: 1s3alJJATsWK91vf5zrODYlQa+LauM/9udaLZlQhHlpu46g/KzmSS5c3CGy6xF9kzAqBhvjmKBuZO/pSL7tfOg==
+  issuer: auth

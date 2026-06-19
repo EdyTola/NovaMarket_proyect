@@ -1,0 +1,166 @@
+{
+  "realm": "novamarket",
+  "enabled": true,
+  "displayName": "NovaMarket",
+  "displayNameHtml": "<b>NovaMarket</b> Minimarket POS",
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": false,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": false,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+  "accessTokenLifespan": 3600,
+  "roles": {
+    "realm": [
+      { "name": "ROLE_ADMIN", "description": "Administrador del minimarket" },
+      { "name": "ROLE_USER", "description": "Usuario general" },
+      { "name": "ROLE_CAJERO", "description": "Cajero POS" },
+      { "name": "ROLE_SUPERVISOR", "description": "Supervisor de tienda" },
+      { "name": "ROLE_REPARTIDOR", "description": "Repartidor / delivery" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "ecom-ng",
+      "name": "NovaMarket Angular SPA",
+      "description": "Cliente publico para clients/ecom-ng (Authorization Code + PKCE)",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "implicitFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "fullScopeAllowed": true,
+      "rootUrl": "http://localhost:4200",
+      "baseUrl": "http://localhost:4200",
+      "redirectUris": [
+        "http://localhost:4200/*",
+        "http://127.0.0.1:4200/*"
+      ],
+      "webOrigins": [
+        "http://localhost:4200",
+        "http://127.0.0.1:4200",
+        "+"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:4200/*##http://127.0.0.1:4200/*"
+      },
+      "protocolMappers": [
+        {
+          "name": "realm-roles-claim",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "roles",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "preferred-username",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": false,
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "username",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "preferred_username",
+            "jsonType.label": "String"
+          }
+        }
+      ],
+      "defaultClientScopes": [
+        "web-origins",
+        "acr",
+        "profile",
+        "roles",
+        "email"
+      ],
+      "optionalClientScopes": [
+        "address",
+        "phone",
+        "offline_access",
+        "microprofile-jwt"
+      ]
+    },
+    {
+      "clientId": "ecom-gateway",
+      "name": "NovaMarket API Gateway",
+      "description": "Referencia para validacion OIDC en infra/gateway (resource server)",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "bearerOnly": false,
+      "fullScopeAllowed": true
+    }
+  ],
+  "users": [
+    {
+      "username": "admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Admin",
+      "lastName": "NovaMarket",
+      "credentials": [
+        { "type": "password", "value": "admin123", "temporary": false }
+      ],
+      "realmRoles": ["ROLE_ADMIN"]
+    },
+    {
+      "username": "user",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Usuario",
+      "lastName": "Demo",
+      "credentials": [
+        { "type": "password", "value": "user123", "temporary": false }
+      ],
+      "realmRoles": ["ROLE_USER"]
+    },
+    {
+      "username": "cajero",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Cajero",
+      "lastName": "POS",
+      "credentials": [
+        { "type": "password", "value": "cajero123", "temporary": false }
+      ],
+      "realmRoles": ["ROLE_CAJERO"]
+    },
+    {
+      "username": "supervisor",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Supervisor",
+      "lastName": "Tienda",
+      "credentials": [
+        { "type": "password", "value": "supervisor123", "temporary": false }
+      ],
+      "realmRoles": ["ROLE_SUPERVISOR"]
+    },
+    {
+      "username": "repartidor",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Repartidor",
+      "lastName": "Delivery",
+      "credentials": [
+        { "type": "password", "value": "repartidor123", "temporary": false }
+      ],
+      "realmRoles": ["ROLE_REPARTIDOR"]
+    }
+  ]
+}
