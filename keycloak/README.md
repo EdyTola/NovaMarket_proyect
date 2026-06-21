@@ -46,8 +46,29 @@ docker network create ecom-prod-net
 
 ```powershell
 cd keycloak
-docker compose -f compose-dev.yml up -d
+.\start-dev.ps1
 ```
+
+O manualmente:
+
+```powershell
+docker network create ecom-dev-net
+cd keycloak
+docker compose -f compose-dev.yml build keycloak
+docker compose -f compose-dev.yml up -d
+docker logs -f ecom-keycloak-dev
+```
+
+**Primer arranque:** `docker compose build` tarda ~10 min (una sola vez). Luego Keycloak importa el realm en ~2-5 min. Usa PostgreSQL (no H2) para evitar corrupcion en Windows.
+
+Verificar:
+
+```powershell
+curl.exe -s -o NUL -w "realm:%{http_code}" http://localhost:41880/realms/novamarket
+curl.exe -s -o NUL -w "admin:%{http_code}" http://localhost:41880/admin/
+```
+
+Debe devolver `realm:200` y `admin:302`.
 
 Enlaces:
 
@@ -56,6 +77,17 @@ Enlaces:
 - OpenID config: http://localhost:41880/realms/novamarket/.well-known/openid-configuration
 
 Desde contenedores en `ecom-dev-net`: `http://keycloak:8080`
+
+Si falla o queda colgado:
+
+```powershell
+cd keycloak
+docker compose -f compose-dev.yml down
+docker compose -f compose-dev.yml up -d --build
+docker logs -f ecom-keycloak-dev
+```
+
+Espera en logs: `Keycloak 25.0.6 ... started` e `Import finished successfully`
 
 ### PROD
 

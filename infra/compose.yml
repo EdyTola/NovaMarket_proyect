@@ -68,7 +68,7 @@ services:
       SERVER_PORT: 8080
       SPRING_PROFILES_ACTIVE: prod
       CONFIG_SERVER_URL: http://config-server:8888
-      JWT_SECRET: ${JWT_SECRET}
+      KEYCLOAK_ISSUER_URI: http://keycloak:8080/realms/novamarket
     depends_on:
       config-server:
         condition: service_healthy

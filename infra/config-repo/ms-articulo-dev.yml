@@ -3,6 +3,12 @@ server:
   forward-headers-strategy: framework
 
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:41880/realms/novamarket
+
   datasource:
     url: jdbc:postgresql://localhost:15433/ecom_producto_db
     username: ecom

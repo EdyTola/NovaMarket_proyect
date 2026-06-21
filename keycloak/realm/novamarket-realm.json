@@ -3,7 +3,7 @@
   "enabled": true,
   "displayName": "NovaMarket",
   "displayNameHtml": "<b>NovaMarket</b> Minimarket POS",
-  "sslRequired": "external",
+  "sslRequired": "none",
   "registrationAllowed": false,
   "loginWithEmailAllowed": false,
   "duplicateEmailsAllowed": false,

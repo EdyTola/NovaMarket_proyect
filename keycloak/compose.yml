@@ -24,10 +24,13 @@ services:
       - ecom-keycloak-int
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.1.4
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: ecom-keycloak-dev:local
     container_name: ecom-keycloak
     restart: unless-stopped
-    command: start --import-realm
+    command: start --optimized --import-realm --http-enabled=true --hostname=http://localhost:28180
     depends_on:
       postgres-keycloak:
         condition: service_healthy
@@ -38,24 +41,11 @@ services:
       KC_DB_URL: jdbc:postgresql://postgres-keycloak:5432/${KC_DB_NAME:-keycloak_db}
       KC_DB_USERNAME: ${KC_DB_USER:-keycloak}
       KC_DB_PASSWORD: ${KC_DB_PASSWORD:-keycloak}
-      KC_HEALTH_ENABLED: "true"
-      KC_METRICS_ENABLED: "true"
-      KC_HTTP_ENABLED: "true"
-      KC_HOSTNAME: localhost
-      KC_HOSTNAME_PORT: 28180
-      KC_HOSTNAME_STRICT: "false"
-      KC_HOSTNAME_STRICT_HTTPS: "false"
-      KC_PROXY_HEADERS: xforwarded
+      JAVA_OPTS_APPEND: "-Xms512m -Xmx1536m"
     ports:
       - "28180:8080"
     volumes:
       - ./realm:/opt/keycloak/data/import:ro
-    healthcheck:
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080; echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; cat <&3 | grep -q '200'"]
-      interval: 15s
-      timeout: 10s
-      retries: 12
-      start_period: 120s
     networks:
       ecom-keycloak-int:
       ecom-prod-net:

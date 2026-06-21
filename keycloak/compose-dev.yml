@@ -2,36 +2,59 @@ name: ecom-keycloak-dev
 
 services:
 
+  postgres-keycloak-dev:
+    image: postgres:16-alpine
+    container_name: ecom-postgres-keycloak-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: keycloak_db
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloak
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak -d keycloak_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    volumes:
+      - ecom_keycloak_pg_dev_data:/var/lib/postgresql/data
+    networks:
+      ecom-dev-net:
+        aliases:
+          - postgres-keycloak-dev
+
   keycloak:
-    image: quay.io/keycloak/keycloak:26.1.4
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: ecom-keycloak-dev:local
     container_name: ecom-keycloak-dev
     restart: unless-stopped
-    command: start-dev --import-realm
+    command: start --optimized --import-realm --http-enabled=true --hostname=http://localhost:41880
+    depends_on:
+      postgres-keycloak-dev:
+        condition: service_healthy
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:-admin}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:-admin}
-      KC_HEALTH_ENABLED: "true"
-      KC_METRICS_ENABLED: "true"
-      KC_HTTP_RELATIVE_PATH: /
-      KC_HOSTNAME: localhost
-      KC_HOSTNAME_PORT: 41880
-      KC_HOSTNAME_STRICT: "false"
-      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres-keycloak-dev:5432/keycloak_db
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloak
+      JAVA_OPTS_APPEND: "-Xms512m -Xmx1536m"
     ports:
       - "41880:8080"
     volumes:
       - ./realm:/opt/keycloak/data/import:ro
-    healthcheck:
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080; echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3; cat <&3 | grep -q '200'"]
-      interval: 15s
-      timeout: 10s
-      retries: 12
-      start_period: 90s
     networks:
       ecom-dev-net:
         aliases:
           - keycloak
 
+volumes:
+  ecom_keycloak_pg_dev_data:
+
 networks:
   ecom-dev-net:
+    external: true
     name: ecom-dev-net

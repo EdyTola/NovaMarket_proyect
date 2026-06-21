@@ -32,7 +32,6 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       CONFIG_SERVER_URL: ${CONFIG_SERVER_URL}
-      JWT_SECRET: ${JWT_SECRET}
       DB_HOST: ecom-postgres-auth
       DB_PORT: 5432
       DB_NAME: ${DB_NAME}
